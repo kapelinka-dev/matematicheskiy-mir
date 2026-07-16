@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Математический мир — тренажёр</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="sky" aria-hidden="true"></div>
+  <div class="clouds" aria-hidden="true"></div>
+  <div class="grass" aria-hidden="true"></div>
+
+  <div class="app">
+    <!-- СТАРТ -->
+    <section id="screen-home" class="screen active">
+      <header class="brand-hero">
+        <img class="hero-art" src="assets/roblox-ref.png" alt="Герои математического мира" />
+        <div class="brand-overlay">
+          <p class="brand-name">Математический мир</p>
+          <h1 class="brand-tagline">Приключения с числами</h1>
+          <p class="brand-sub">Решай примеры, собирай призы и открывай суперсюрпризы!</p>
+          <button type="button" class="btn btn-primary btn-xl" id="btn-start">Начать раунд</button>
+        </div>
+      </header>
+
+      <div class="home-panels">
+        <div class="panel stats-panel">
+          <h2>Твой прогресс</h2>
+          <div class="stat-row">
+            <span>Решено верно</span>
+            <strong id="stat-correct">0</strong>
+          </div>
+          <div class="stat-row">
+            <span>До следующего приза</span>
+            <strong id="stat-until-prize">10</strong>
+          </div>
+          <div class="stat-row">
+            <span>Ошибок в журнале</span>
+            <strong id="stat-mistakes">0</strong>
+          </div>
+          <div class="progress-bar" aria-label="Прогресс до приза">
+            <div class="progress-fill" id="prize-progress"></div>
+          </div>
+          <p class="hint">За каждые 10 верных ответов — случайный приз!</p>
+        </div>
+
+        <div class="panel inventory-panel">
+          <h2>Коллекция призов</h2>
+          <div id="inventory-grid" class="inventory-grid"></div>
+          <p class="hint">3 одинаковых категории → суперприз ✨</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ИГРА -->
+    <section id="screen-game" class="screen">
+      <div class="game-top">
+        <button type="button" class="btn btn-ghost" id="btn-home">← Домой</button>
+        <div class="round-meta">
+          <span class="chip" id="round-counter">Пример 1 / 10</span>
+          <span class="chip chip-accent" id="streak-chip">Серия: 0</span>
+        </div>
+      </div>
+
+      <div class="mascot-row">
+        <div class="mascot" id="mascot" aria-hidden="true">🤖</div>
+        <p class="mascot-speech" id="mascot-speech">Давай решим этот пример!</p>
+      </div>
+
+      <div class="problem-card">
+        <p class="op-label" id="op-label">Сложение</p>
+        <div class="problem" id="problem-text">12 + 8 = ?</div>
+        <form id="answer-form" class="answer-form" autocomplete="off">
+          <input
+            type="number"
+            id="answer-input"
+            class="answer-input"
+            inputmode="numeric"
+            placeholder="?"
+            required
+          />
+          <button type="submit" class="btn btn-primary btn-lg">Проверить</button>
+        </form>
+        <div class="feedback" id="feedback" hidden></div>
+      </div>
+
+      <div class="numpad" id="numpad" aria-label="Цифровая клавиатура">
+        <button type="button" data-key="1">1</button>
+        <button type="button" data-key="2">2</button>
+        <button type="button" data-key="3">3</button>
+        <button type="button" data-key="4">4</button>
+        <button type="button" data-key="5">5</button>
+        <button type="button" data-key="6">6</button>
+        <button type="button" data-key="7">7</button>
+        <button type="button" data-key="8">8</button>
+        <button type="button" data-key="9">9</button>
+        <button type="button" data-key="clear" class="key-wide">⌫</button>
+        <button type="button" data-key="0">0</button>
+        <button type="button" data-key="enter" class="key-wide key-ok">OK</button>
+      </div>
+    </section>
+
+    <!-- ИТОГ РАУНДА -->
+    <section id="screen-round" class="screen">
+      <div class="result-card">
+        <h2>Раунд завершён!</h2>
+        <div class="result-stats">
+          <div><span>Верно</span><strong id="round-correct">0</strong></div>
+          <div><span>Ошибки</span><strong id="round-wrong">0</strong></div>
+        </div>
+        <p id="round-message" class="round-message"></p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" id="btn-again">Ещё раунд</button>
+          <button type="button" class="btn btn-secondary" id="btn-to-home">К коллекции</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ПРИЗ -->
+    <div id="overlay-prize" class="overlay" hidden>
+      <div class="overlay-card prize-card pop-in">
+        <p class="overlay-eyebrow">Ура!</p>
+        <h2>Ты получил приз!</h2>
+        <div class="prize-emoji" id="prize-emoji">🍬</div>
+        <p class="prize-name" id="prize-name">Конфетка</p>
+        <p class="prize-cat" id="prize-cat"></p>
+        <button type="button" class="btn btn-primary" id="btn-prize-ok">Забрать!</button>
+      </div>
+    </div>
+
+    <!-- СУПЕРПРИЗ -->
+    <div id="overlay-super" class="overlay" hidden>
+      <div class="overlay-card super-card pop-in">
+        <p class="overlay-eyebrow">СУПЕРПРИЗ!</p>
+        <h2 id="super-title">Крылья чемпиона</h2>
+        <div class="prize-emoji big" id="super-emoji">🪽</div>
+        <p id="super-desc" class="prize-cat"></p>
+        <button type="button" class="btn btn-primary" id="btn-super-ok">Круто!</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
